@@ -16,6 +16,7 @@ use App\Unit;
 use App\Tax;
 use App\Sale;
 use App\Delivery;
+use App\DeliveryStatus;
 use App\PosSetting;
 use App\Product_Sale;
 use App\Product_Warehouse;
@@ -356,7 +357,6 @@ class SaleController extends Controller
                 $lims_city_data = City::where('id', $sale->customer_city)->first();
                 $nestedData['city'] = $lims_city_data->name;
 				$sale_city = $lims_city_data->name;
-				$sale_delivery = "Delivery";
 
                 if($sale->is_valide == 1)
                 {
@@ -419,6 +419,33 @@ class SaleController extends Controller
                 $nestedData['grand_total'] = number_format($sale->grand_total, 2);
                 $nestedData['paid_amount'] = number_format($sale->paid_amount, 2);
                 $nestedData['due'] = number_format($sale->grand_total - $sale->paid_amount, 2);
+                $lims_delivery_data = Delivery::where('sale_id', $sale->id)->first();
+                if ($lims_delivery_data) {
+                    $lims_delivery_status_data = DeliveryStatus::where('reference_no', $lims_delivery_data->reference_no)->orderBy('status', 'desc')->first();
+                    switch ($lims_delivery_status_data->status) {
+                        case "1":
+                            $nestedData['delivery_status'] = '<div class="badge badge-warning">Pickup<br>'.$lims_delivery_status_data->status_date.'</div>';
+                            break;
+                        case "2":
+                            $nestedData['delivery_status'] = '<div class="badge badge-info">Sent<br>'.$lims_delivery_status_data->status_date.'</div>';
+                            break;
+                        case "3":
+                            $nestedData['delivery_status'] = '<div class="badge badge-primary">Distribution<br>'.$lims_delivery_status_data->status_date.'</div>';
+                            break;
+                        case "4":
+                            $nestedData['delivery_status'] = '<div class="badge badge-success">Delivered<br>'.$lims_delivery_status_data->status_date.'</div>';
+                            break;
+                        case "5":
+                            $nestedData['delivery_status'] = '<div class="badge badge-danger">Return<br>'.$lims_delivery_status_data->status_date.'</div>';
+                            break;
+                    }
+                    $sale_delivery_status = $lims_delivery_status_data->status;
+                    $sale_delivery_status_date = $lims_delivery_status_data->status_date;
+                } else {
+                    $nestedData['delivery_status'] = '<div class="badge badge-secondary">'.trans('file.Pas de livraison').'</div>';
+                    $sale_delivery_status = "";
+                    $sale_delivery_status_date = "";
+                }
                 $nestedData['options'] = '<div class="btn-group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle '.Auth::user()->role_id.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
                               <span class="caret"></span>
@@ -483,7 +510,7 @@ class SaleController extends Controller
                     ' "'.$sale->customer_tel.'"', //4
                     ' "'.$sale->customer_address.'"', //5
                     ' "'.$sale_city.'"', //6
-                    ' "'.$sale_delivery.'"', //7
+                    ' "'.$sale_delivery_status.'"', //7
                     ' "'.$sale->user_id.'"', //8
                     ' "'.$sale->is_valide.'"', //9
                     ' "'.$sale->id.'"', //10
@@ -491,11 +518,12 @@ class SaleController extends Controller
                     ' "'.$sale->grand_total.'"', //12
                     ' "'.preg_replace('/[\n\r]/', "<br>", $sale->sale_note).'"', //13
                     ' "'.preg_replace('/[\n\r]/', "<br>", $sale->staff_note).'"', //14
-                    ' "'.$request->input('search_string').'"', //12
-                    ' "'.$request->input('starting_date').'"', //12
-                    ' "'.$request->input('ending_date').'"', //12
-                    ' "'.$status_id.'"', //12
-                    ' "'.$condition.'"]' //12
+                    ' "'.$request->input('search_string').'"', //15
+                    ' "'.$request->input('starting_date').'"', //16
+                    ' "'.$request->input('ending_date').'"', //17
+                    ' "'.$status_id.'"', //18
+                    ' "'.$condition.'"', //19
+                    ' "'.$sale_delivery_status_date.'"]' //20
                 );
                 $data[] = $nestedData;
             }

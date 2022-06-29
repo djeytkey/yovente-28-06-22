@@ -337,17 +337,19 @@
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-                <?php echo Form::open(['route' => 'delivery.store', 'method' => 'post', 'files' => true]); ?>
+                <?php echo Form::open(['route' => 'delivery.store', 'method' => 'post', 'files' => true, 'class' => 'delivery-form']); ?>
 
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        <label><strong><?php echo e(trans('file.Delivery Reference')); ?></strong></label>
+                        <label><strong><?php echo e(trans('file.Delivery Reference')); ?> *</strong></label>
                         <p id="dr"></p>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong><?php echo e(trans('file.Sale Reference')); ?></strong></label>
+                        <label><strong><?php echo e(trans('file.Sale Reference')); ?> *</strong></label>
                         <p id="sr"></p>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12 form-group">
                         <label><strong><?php echo e(trans('file.Status')); ?> *</strong></label>
                         <table class="f-wth table">
@@ -386,7 +388,7 @@
                             <tr>
                                 <td>
                                     <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_pickup" name="status_date[]">
+                                        <input type="text" class="form-control" data-value="1" data-field="chk_pickup" name="status_date[]" disabled>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -394,7 +396,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_sent" name="status_date[]">
+                                        <input type="text" class="form-control" data-value="2" data-field="chk_sent" name="status_date[]" disabled>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -402,7 +404,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_distribution" name="status_date[]">
+                                        <input type="text" class="form-control" data-value="3" data-field="chk_distribution" name="status_date[]" disabled>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -410,7 +412,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_delivered" name="status_date[]">
+                                        <input type="text" class="form-control" data-value="4" data-field="chk_delivered" name="status_date[]" disabled>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -418,23 +420,23 @@
                                 </td>
                                 <td>
                                     <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_return" name="status_date[]">
+                                        <input type="text" class="form-control" data-value="5" data-field="chk_return" name="status_date[]" disabled>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                        </table>                        
-                        
+                        </table>
                     </div>
+                    
                     <div class="col-md-6 form-group">
-                        <label><strong><?php echo e(trans('file.customer')); ?></strong></label>
+                        <label><strong><?php echo e(trans('file.customer')); ?> *</strong></label>
                         <p id="customer"></p>
                     </div>
                     <div class="col-md-6 mt-2 form-group">
-                        <label><strong><?php echo e(trans('file.Delivered By')); ?></strong></label>
-                        <input type="text" name="delivered_by" class="form-control">
+                        <label><strong><?php echo e(trans('file.Delivered By')); ?> *</strong></label>
+                        <input type="text" name="delivered_by" class="form-control" required>
                     </div>
                     
                     
@@ -446,12 +448,6 @@
                 </div>
                 <input type="hidden" name="reference_no">
                 <input type="hidden" name="sale_id">
-                <input type="hidden" name="pickup">
-                <input type="hidden" name="sent">
-                <input type="hidden" name="distribution">
-                <input type="hidden" name="return">
-                <input type="hidden" name="return_reason">
-                <input type="hidden" name="delivered">
                 <button type="submit" class="btn btn-primary"><?php echo e(trans('file.submit')); ?></button>
                 <?php echo e(Form::close()); ?>
 
@@ -534,7 +530,7 @@
 
     $(document).on("click", "tr.sale-link td:not(:first-child, :last-child)", function() {
         var sale = $(this).parent().data('sale');
-        alert(sale);
+        //alert(sale);
         saleDetails(sale);
     });
 
@@ -795,12 +791,28 @@
     $(document).on("click", "input[name='status[]']", function(event) {
         var the_id = $(this).attr('id');
         if($(this).is(':checked')) {
-            // alert('checked : ' + the_id);
             $('[data-field="'+the_id+'"]').prop("required", true);
+            $('[data-field="'+the_id+'"]').prop("disabled", false);
         } else {
-            // alert('unchecked : ' + the_id);
             $('[data-field="'+the_id+'"]').prop("required", false);
+            $('[data-field="'+the_id+'"]').prop("disabled", true);
+            $('[data-field="'+the_id+'"]').val("");
         }
+    });
+
+    $(document).on('submit', '.delivery-form', function(e) {
+        if( ($('#chk_pickup').not(':checked').length) && ($('#chk_sent').not(':checked').length) && ($('#chk_distribution').not(':checked').length) && ($('#chk_delivered').not(':checked').length) && ($('#chk_return').not(':checked').length) ) {
+            alert('You must select at least 1 delivery status !');
+            e.preventDefault();
+        }
+        else if( $('input[name="edit_paying_amount"]').val() < parseFloat($('input[name="edit_amount"]').val()) ) {
+            alert('Paying amount cannot be bigger than recieved amount');
+            $('input[name="edit_amount"]').val('');
+            $(".change").text(parseFloat( $('input[name="edit_paying_amount"]').val() - $('input[name="edit_amount"]').val() ).toFixed(2));
+            e.preventDefault();
+        }
+        
+        $('#edit-payment select[name="edit_paid_by_id"]').prop('disabled', false);
     });
 
     $(document).on("click", "table.sale-list tbody .add-delivery", function(event) {
@@ -808,30 +820,18 @@
         $.get('delivery/create/'+id, function(data) {
             $('#dr').text(data[0]);
             $('#sr').text(data[1]);
-            // if(data[2]) {
-            //     $('#chk_pickup').prop( "checked", true );
-            //     $('#chk_pickup').prop( "disabled", true );
-            // }
-            // if(data[3]) {
-            //     $('#chk_sent').prop( "checked", true );
-            //     $('#chk_sent').prop( "disabled", true );
-            // }
-            // if(data[4]) {
-            //     $('#chk_distribution').prop( "checked", true );
-            //     $('#chk_distribution').prop( "disabled", true );
-            // }
-            // if(data[5]) {
-            //     $('#chk_return').prop( "checked", true );
-            //     $('#chk_return').prop( "disabled", true );
-            // }
-            //Ici Motif Return
-
-
-            $('input[name="delivered_by"]').val(data[7]);
+            $('input[name="delivered_by"]').val(data[6]);
             $('#customer').html(data[2] + "<br>" + data[3] + "<br>" + data[4] + "<br>" + data[5]);
-            $('textarea[name="note"]').val(data[12]);
+            $('textarea[name="note"]').val(data[7]);            
             $('input[name="reference_no"]').val(data[0]);
             $('input[name="sale_id"]').val(id);
+            if (data['status']) {
+                for (var i=0; i<=data['status'].length-1; i++) {
+                    $("input[value='"+data['status'][i]+"']").prop( "checked", true );
+                    $('[data-value="'+data['status'][i]+'"]').val(data['status_date'][i]);
+                    $('[data-value="'+data['status'][i]+'"]').prop("disabled", false);
+                }
+            }            
             
             $('#add-delivery').modal('show');
         });
@@ -1051,8 +1051,21 @@
             var valide_status = '<div class="badge badge-success"><?php echo e(trans("file.Confirmed")); ?></div>';
         else
             var valide_status = '<div class="badge badge-warning"><?php echo e(trans("file.Not Confirmed")); ?></div>';
+
+        if (sale[7] == 1) 
+            var sale_delivery = '<div class="badge badge-warning">Pickup<br>'+sale[20]+'</div>';
+        else if (sale[7] == 2)
+            var sale_delivery = '<div class="badge badge-info">Sent<br>'+sale[20]+'</div>';
+        else if (sale[7] == 3)
+            var sale_delivery = '<div class="badge badge-primary">Distribution<br>'+sale[20]+'</div>';
+        else if (sale[7] == 4)
+            var sale_delivery = '<div class="badge badge-success">Delivered<br>'+sale[20]+'</div>';
+        else if (sale[7] == 5)
+            var sale_delivery = '<div class="badge badge-danger">Return<br>'+sale[20]+'</div>';
+        else
+            var sale_delivery = '<div class="badge badge-secondary"><?php echo e(trans("file.Pas de livraison")); ?></div>';
         
-        var htmltext = '<div class="row"><div class="col-md-6"><table><tr><td><u><strong><?php echo e(trans("file.Date")); ?></strong></u></td><td>&nbsp;&nbsp;:&nbsp;&nbsp;</td><td>'+sale[0]+'</tr><tr><td><u><strong><?php echo e(trans("file.reference")); ?></strong></u></td><td>&nbsp;&nbsp;:&nbsp;&nbsp;</td><td>'+sale[1]+'</tr></table></div><div class="col-md-6"><table><tr><td><u><strong><?php echo e(trans("file.Status")); ?></strong></u></td><td>&nbsp;&nbsp;:&nbsp;&nbsp;</td><td>'+valide_status+'</tr><tr><td><u><strong><?php echo e(trans("file.delivery")); ?></strong></u></td><td>&nbsp;&nbsp;:&nbsp;&nbsp;</td><td>'+sale[7]+'</tr></table></div></div><br><br><div class="row"><div class="col-md-12"><u><strong><?php echo e(trans("file.customer")); ?></strong></u> : <br>'+sale[3]+'<br>'+sale[4]+'<br>'+sale[5]+'<br>'+sale[6]+'</div></div>';
+        var htmltext = '<div class="row"><div class="col-md-6"><table><tr><td><u><strong><?php echo e(trans("file.Date")); ?></strong></u></td><td>&nbsp;&nbsp;:&nbsp;&nbsp;</td><td>'+sale[0]+'</tr><tr><td><u><strong><?php echo e(trans("file.reference")); ?></strong></u></td><td>&nbsp;&nbsp;:&nbsp;&nbsp;</td><td>'+sale[1]+'</tr></table></div><div class="col-md-6"><table><tr><td><u><strong><?php echo e(trans("file.Status")); ?></strong></u></td><td>&nbsp;&nbsp;:&nbsp;&nbsp;</td><td>'+valide_status+'</tr><tr><td><u><strong><?php echo e(trans("file.delivery")); ?></strong></u></td><td>&nbsp;&nbsp;:&nbsp;&nbsp;</td><td>'+sale_delivery+'</td></tr></table></div></div><br><br><div class="row"><div class="col-md-12"><u><strong><?php echo e(trans("file.customer")); ?></strong></u> : <br>'+sale[3]+'<br>'+sale[4]+'<br>'+sale[5]+'<br>'+sale[6]+'</div></div>';
 
         $.get('sales/product_sale/' + sale[10], function(data){
             $(".product-sale-list tbody").remove();

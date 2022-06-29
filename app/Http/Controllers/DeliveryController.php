@@ -46,6 +46,11 @@ class DeliveryController extends Controller
             $delivery_data[] = $lims_city_data->name;                   //Customer City
     		$delivery_data[] = $lims_delivery_data->delivered_by;
     		$delivery_data[] = $lims_delivery_data->note;
+            $lims_delivery_status_data = DeliveryStatus::where('reference_no', $lims_delivery_data->reference_no)->get();
+            foreach ($lims_delivery_status_data as $key => $delivery_status_data) {
+                $delivery_data['status'][$key] = $delivery_status_data->status;
+                $delivery_data['status_date'][$key] = $delivery_status_data->status_date;
+            }
     	}
     	else{ //Première livraison
     		$delivery_data[] = 'dr-' . date("dmy") . '-'. date("His");  //Delivery reference
@@ -54,11 +59,6 @@ class DeliveryController extends Controller
     		$delivery_data[] = $lims_sale_data->customer_tel;           //Customer Tel
     		$delivery_data[] = $lims_sale_data->customer_address;       //Customer Address
             $delivery_data[] = $lims_city_data->name;                   //Customer City
-            // $delivery_data[] = '';                                      //Pickup date
-    		// $delivery_data[] = '';                                      //Sent date
-    		// $delivery_data[] = '';                                      //Distribution date
-    		// $delivery_data[] = '';                                      //Return date
-    		// $delivery_data[] = '';                                      //Motif Return
     		$delivery_data[] = '';                                      //Delivered By
     		$delivery_data[] = '';                                      //Note 
     	}
@@ -71,109 +71,44 @@ class DeliveryController extends Controller
         //dd($request);
         $data = $request->all();
         $delivery = Delivery::firstOrNew(['reference_no' => $data['reference_no'] ]);
-        if ($delivery->exists) {
-            // $lims_delivery_statuses_data = DeliveryStatus::where('reference_no', $data['reference_no'])->get();
-            // foreach ($lims_delivery_statuses_data as $delivery_statuses_data) {
-            //     $delivery_statuses_data->delete();
-            // }
-            // $delivery->delivered_by = $data['delivered_by'];
-            // $delivery->note = $data['note'];
-            // $delivery->save();
-            $message = 'Delivery Exists';
-        } else {
-            // $delivery->sale_id = $data['sale_id'];
-            // $delivery->user_id = Auth::id();
-            // $lims_sale_data = Sale::find($data['sale_id']);
-            // $delivery->sold_by = $lims_sale_data->user_id;
-            // $delivery->delivered_by = $data['delivered_by'];
-            // $delivery->note = $data['note'];
-            // $delivery->save();
-            
-
-            $message = 'Delivery doesn\'t exist';
+        $lims_delivery_statuses_data = DeliveryStatus::where('reference_no', $data['reference_no'])->get();
+        if ($lims_delivery_statuses_data) {
+            foreach ($lims_delivery_statuses_data as $delivery_statuses_data) {
+                $delivery_statuses_data->delete();
+            }
         }
-        // $data['user_id'] = Auth::id();
-        // $lims_sale_data = Sale::where('id' , $data['sale_id'])->get();
-
-
-
-
-
-
-
-
-
-    	
-        // if ($delivery->exists) {
-        //     $data['packing'] = $delivery->packing;
-        //     $data['pickup'] = $delivery->pickup;
-        //     $data['delivering'] = $delivery->delivering;
-        //     $data['delivered'] = $delivery->delivered;
-        // } else {
-        //     $data['packing'] = null;
-        //     $data['pickup'] = null;
-        //     $data['delivering'] = null;
-        //     $data['delivered'] = null;
-        // }
-    	   
-        // switch ($data['status']) {
-        //     case "1":
-        //         $data['packing'] = date("d-m-Y");
-        //         $data['pickup'] = null;
-        //         $data['delivering'] = null;
-        //         $data['delivered'] = null;
-        //         break;
-        //     case "2":
-        //         $data['pickup'] = date("d-m-Y");
-        //         $data['delivering'] = null;
-        //         $data['delivered'] = null;
-        //         break;
-        //     case "3":
-        //         $data['delivering'] = date("d-m-Y");
-        //         $data['delivered'] = null;
-        //         break;
-        //     case "4":
-        //         $data['delivered'] = date("d-m-Y");
-        //         break;
-        // }
-        // $delivery->packing = $data['packing'];
-        // $delivery->pickup = $data['pickup'];
-        // $delivery->delivering = $data['delivering'];
-        // $delivery->delivered = $data['delivered'];
-        // $delivery->sale_id = $data['sale_id'];
-        // $delivery->user_id = Auth::id();
-        // $delivery->address = $data['address'];
-        // $delivery->delivered_by = $data['delivered_by'];
-        // $delivery->recieved_by = $data['recieved_by'];
-        // $delivery->status = $data['status'];
-        // $delivery->note = $data['note'];
-        // $lims_sale_data = Sale::find($data['sale_id']);
-        // $delivery->sold_by = $lims_sale_data->user_id;
-        // $delivery->save();
-        // $lims_customer_data = Customer::find($lims_sale_data->customer_id);
-        // $message = 'Delivery created successfully';
-
-// **********************************************/
-
-        // if($lims_customer_data->email && $data['status'] != 1){
-        //     $mail_data['email'] = $lims_customer_data->email;
-        //     $mail_data['customer'] = $lims_customer_data->name;
-        //     $mail_data['sale_reference'] = $lims_sale_data->reference_no;
-        //     $mail_data['delivery_reference'] = $delivery->reference_no;
-        //     $mail_data['status'] = $data['status'];
-        //     $mail_data['address'] = $data['address'];
-        //     $mail_data['delivered_by'] = $data['delivered_by'];
-        //     //return $mail_data;
-        //     try{
-        //         Mail::send( 'mail.delivery_details', $mail_data, function( $message ) use ($mail_data)
-        //         {
-        //             $message->to( $mail_data['email'] )->subject( 'Delivery Details' );
-        //         });
-        //     }
-        //     catch(\Exception $e){
-        //         $message = 'Delivery created successfully. Please setup your <a href="setting/mail_setting">mail setting</a> to send mail.';
-        //     }  
-        // }
+        if ($delivery->exists) {
+            $delivery->delivered_by = $data['delivered_by'];
+            $delivery->note = $data['note'];
+            $delivery->save();
+            foreach ($data['status'] as $key => $delivery_status) {
+                $deliveries = new DeliveryStatus();
+                $deliveries->reference_no = $data['reference_no'];
+                $deliveries->status = $data['status'][$key];
+                $deliveries->status_date = $data['status_date'][$key];
+                $deliveries->motif = "";
+                $deliveries->save();
+            }
+            $message = 'Delivery added successfully';
+        } else {
+            $delivery->reference_no = $data['reference_no'];
+            $delivery->sale_id = $data['sale_id'];
+            $delivery->user_id = Auth::id();
+            $lims_sale_data = Sale::find($data['sale_id']);
+            $delivery->sold_by = $lims_sale_data->user_id;
+            $delivery->delivered_by = $data['delivered_by'];
+            $delivery->note = $data['note'];
+            $delivery->save();
+            foreach ($data['status'] as $key => $delivery_status) {
+                $deliveries = new DeliveryStatus();
+                $deliveries->reference_no = $data['reference_no'];
+                $deliveries->status = $data['status'][$key];
+                $deliveries->status_date = $data['status_date'][$key];
+                $deliveries->motif = "";
+                $deliveries->save();
+            }
+            $message = 'Delivery created successfully';
+        }
         return redirect('sales')->with('message', $message);
     }
 
