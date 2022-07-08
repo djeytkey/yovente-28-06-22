@@ -46,7 +46,7 @@ class DeliveryController extends Controller
             $delivery_data[] = $lims_city_data->name;                   //Customer City
     		$delivery_data[] = $lims_delivery_data->delivered_by;
     		$delivery_data[] = $lims_delivery_data->note;
-            $delivery_data[] = date('d/m/Y H:i:s');;
+            $delivery_data[] = date('d/m/Y H:i:s');
     	}
     	else{ //Première livraison
     		$delivery_data[] = 'dr-' . date("dmy") . '-'. date("His");  //Delivery reference
@@ -57,7 +57,7 @@ class DeliveryController extends Controller
             $delivery_data[] = $lims_city_data->name;                   //Customer City
     		$delivery_data[] = '';                                      //Delivered By
     		$delivery_data[] = '';                                      //Note 
-    		$delivery_data[] = date('d/m/Y H:i:s');;                    
+    		$delivery_data[] = date('d/m/Y H:i:s');                    
     	}
 
     	return $delivery_data;
