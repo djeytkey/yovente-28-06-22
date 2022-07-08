@@ -22,39 +22,28 @@
             </thead>
             <tbody>
                 @foreach($lims_delivery_all as $key=>$delivery)
-                <?php 
-                    $customer_sale = DB::table('sales')->join('customers', 'sales.customer_id', '=', 'customers.id')->where('sales.id', $delivery->sale_id)->select('sales.reference_no','customers.name')->get();
-
-                    $packing = trans('file.Packing');
-                    $packing_date = $delivery->packing;
-
-                    $pickup = trans('file.Pickup');
-                    $pickup_date = $delivery->pickup;
-
-                    $delivering = trans('file.Delivering');
-                    $delivering_date = $delivery->delivering;
-
-                    $delivered = trans('file.Delivered');
-                    $delivered_date = $delivery->delivered;
-
-                    switch ($delivery->status) {
-                        case "1":
-                            $status = trans('file.Packing');
-                            $packing_date = $delivery->packing;
-                            break;
-                        case "2":
-                            $status = trans('file.Pickup');
-                            $pickup_date = $delivery->pickup;
-                            break;
-                        case "3":
-                            $status = trans('file.Delivering');
-                            $delivering_date = $delivery->delivering;
-                            break;
-                        case "4":
-                            $status = trans('file.Delivered');
-                            $delivered_date = $delivery->delivered;
-                            break;
-                    }
+                <?php
+                    $lims_sale_data = DB::table('sales')->find($delivery->sale_id);
+                    // $lims_delivery_status_data = DB::table('delivery_statuses')->where('reference_no', $delivery->reference_no)->get();
+                    // foreach ($lims_delivery_status_data as $index => $delivery_status_data) {
+                    //     switch ($delivery_status_data->status) {
+                    //         case '1':
+                    //             $pickup[$index] = $delivery_status_data->status_date;
+                    //             break;
+                    //         case '2':
+                    //             $sent[$index] = $delivery_status_data->status_date;
+                    //             break;
+                    //         case '3':
+                    //             $distribution[$index] = $delivery_status_data->status_date;
+                    //             break;
+                    //         case '4':
+                    //             $delivered[$index] = $delivery_status_data->status_date;
+                    //             break;
+                    //         case '5':
+                    //             $return[$index] = $delivery_status_data->status_date;
+                    //             break;
+                    //     }
+                    // }
                     
                     $barcode = \DNS2D::getBarcodePNG($delivery->reference_no, 'QRCODE');
                 ?>
@@ -62,30 +51,31 @@
                     "{{date($general_setting->date_format, strtotime($delivery->created_at->toDateString()))}}", 
                     "{{$delivery->reference_no}}", 
                     "{{$delivery->sale->reference_no}}", 
-                    "{{$packing}}", 
-                    "{{$packing_date}}", 
-                    "{{$pickup}}", 
-                    "{{$pickup_date}}", 
-                    "{{$delivering}}", 
-                    "{{$delivering_date}}", 
-                    "{{$delivered}}", 
-                    "{{$delivered_date}}", 
-                    "{{$delivery->id}}", 
-                    "{{$delivery->sale->customer->name}}", 
-                    "{{$delivery->sale->customer->phone_number}}", 
-                    "{{$delivery->sale->customer->address}}", 
-                    "{{$delivery->sale->customer->city}}", 
-                    "{{$delivery->note}}", 
-                    "{{$delivery->user->name}}", 
-                    "{{$delivery->delivered_by}}", 
-                    "{{$delivery->recieved_by}}"
-                ]'>                
+                    "Pickup",                                          {{-- "{{$packing}}",  --}}
+                    "Pickup Date",                                {{-- "{{$packing_date}}", --}}
+                    "Sent",                                      {{-- "{{$packing_date}}", --}}
+                    "Sent Date",                                 {{-- "{{$packing_date}}", --}}
+                    "Distribution",                                  {{-- "{{$packing_date}}", --}}
+                    "Distribution Date",                             {{-- "{{$packing_date}}", --}}
+                    "Delivered",                                   {{-- "{{$packing_date}}", --}}
+                    "Delivered Date",                              {{-- "{{$packing_date}}", --}}
+                    "{{$delivery->id}}",                                {{-- "{{$packing_date}}", --}}
+                    "{{$lims_sale_data->customer_name}}",              {{-- "{{$packing_date}}", --}}
+                    "{{$lims_sale_data->customer_tel}}",      {{-- "{{$packing_date}}", --}} 
+                    "{{$lims_sale_data->customer_address}}",           {{-- "{{$packing_date}}", --}}
+                    "{{$lims_sale_data->customer_city}}",              {{-- "{{$packing_date}}", --}}
+                    "{{$delivery->note}}",                              {{-- "{{$packing_date}}", --}}
+                    "{{$delivery->user->name}}",                        {{-- "{{$packing_date}}", --}}
+                    "{{$delivery->delivered_by}}",                      {{-- "{{$packing_date}}", --}}
+                    "Received By"                        {{-- "{{$packing_date}}", --}}
+                ]'>                  
                     <td>{{$key}}</td>
                     <td>{{ $delivery->reference_no }}</td>
-                    <td>{{ $customer_sale[0]->reference_no }}</td>
-                    <td>{{ $customer_sale[0]->name }}</td>
-                    <td>{{ $delivery->address }}</td>
-                    @if($delivery->status == 1)
+                    <td>{{ $lims_sale_data->reference_no }}</td>
+                    <td>{{ $lims_sale_data->customer_name }}</td>
+                    <td>{{ $lims_sale_data->customer_address }}</td>
+                    <td>This is status</td>
+                    {{-- @if($delivery->status == 1)
                     <td><div class="badge badge-warning">{{$status}}</div></td>
                     @elseif($delivery->status == 2)
                     <td><div class="badge badge-info">{{$status}}</div></td>
@@ -93,7 +83,7 @@
                     <td><div class="badge badge-primary">{{$status}}</div></td>
                     @else
                     <td><div class="badge badge-success">{{$status}}</div></td>
-                    @endif
+                    @endif --}}
                     <td>
                         <div class="btn-group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}

@@ -46,11 +46,7 @@ class DeliveryController extends Controller
             $delivery_data[] = $lims_city_data->name;                   //Customer City
     		$delivery_data[] = $lims_delivery_data->delivered_by;
     		$delivery_data[] = $lims_delivery_data->note;
-            $lims_delivery_status_data = DeliveryStatus::where('reference_no', $lims_delivery_data->reference_no)->get();
-            foreach ($lims_delivery_status_data as $key => $delivery_status_data) {
-                $delivery_data['status'][$key] = $delivery_status_data->status;
-                $delivery_data['status_date'][$key] = $delivery_status_data->status_date;
-            }
+            $delivery_data[] = date('d/m/Y H:i:s');;
     	}
     	else{ //Première livraison
     		$delivery_data[] = 'dr-' . date("dmy") . '-'. date("His");  //Delivery reference
@@ -61,6 +57,7 @@ class DeliveryController extends Controller
             $delivery_data[] = $lims_city_data->name;                   //Customer City
     		$delivery_data[] = '';                                      //Delivered By
     		$delivery_data[] = '';                                      //Note 
+    		$delivery_data[] = date('d/m/Y H:i:s');;                    
     	}
 
     	return $delivery_data;
@@ -71,25 +68,10 @@ class DeliveryController extends Controller
         //dd($request);
         $data = $request->all();
         $delivery = Delivery::firstOrNew(['reference_no' => $data['reference_no'] ]);
-        $lims_delivery_statuses_data = DeliveryStatus::where('reference_no', $data['reference_no'])->get();
-        if ($lims_delivery_statuses_data) {
-            foreach ($lims_delivery_statuses_data as $delivery_statuses_data) {
-                $delivery_statuses_data->delete();
-            }
-        }
         if ($delivery->exists) {
             $delivery->delivered_by = $data['delivered_by'];
             $delivery->note = $data['note'];
             $delivery->save();
-            foreach ($data['status'] as $key => $delivery_status) {
-                $deliveries = new DeliveryStatus();
-                $deliveries->reference_no = $data['reference_no'];
-                $deliveries->status = $data['status'][$key];
-                $deliveries->status_date = $data['status_date'][$key];
-                $deliveries->motif = "";
-                $deliveries->save();
-            }
-            $message = 'Delivery added successfully';
         } else {
             $delivery->reference_no = $data['reference_no'];
             $delivery->sale_id = $data['sale_id'];
@@ -99,16 +81,14 @@ class DeliveryController extends Controller
             $delivery->delivered_by = $data['delivered_by'];
             $delivery->note = $data['note'];
             $delivery->save();
-            foreach ($data['status'] as $key => $delivery_status) {
-                $deliveries = new DeliveryStatus();
-                $deliveries->reference_no = $data['reference_no'];
-                $deliveries->status = $data['status'][$key];
-                $deliveries->status_date = $data['status_date'][$key];
-                $deliveries->motif = "";
-                $deliveries->save();
-            }
-            $message = 'Delivery created successfully';
         }
+        $deliveries = new DeliveryStatus();
+        $deliveries->reference_no = $data['reference_no'];
+        $deliveries->status = $data['status'];
+        $deliveries->status_date = $data['status_date'];
+        $deliveries->save();
+
+        $message = 'Delivery created successfully';
         return redirect('sales')->with('message', $message);
     }
 

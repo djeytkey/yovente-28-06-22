@@ -352,184 +352,51 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12 form-group">
+                    <div class="col-md-3 form-group">
                         <label><strong>{{trans('file.Status')}} *</strong></label>
-                        <table class="f-wth table">
-                            <tr>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_pickup" value="1">
-                                        <label class="mt-2">{{trans('file.Pickup')}}</label>
-                                    </div>
-                                </td>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_sent" value="2">
-                                        <label class="mt-2">{{trans('file.Sent')}}</label>                     
-                                    </div>
-                                </td>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_distribution" value="3">
-                                        <label class="mt-2">{{trans('file.Distribution')}}</label>
-                                    </div>
-                                </td>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_delivered" value="4">
-                                        <label class="mt-2">{{trans('file.Delivered')}}</label>
-                                    </div>
-                                </td>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_return" value="5">
-                                        <label class="mt-2">{{trans('file.Return')}}</label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-value="1" data-field="chk_pickup" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-value="2" data-field="chk_sent" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-value="3" data-field="chk_distribution" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-value="4" data-field="chk_delivered" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-value="5" data-field="chk_return" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                        <select required name="status" id="status" class="selectpicker form-control" data-live-search="true" title="Select status...">
+                            <option value="1">{{trans('file.Pickup')}}</option>
+                            <option value="2">{{trans('file.Sent')}}</option>
+                            <option value="3">{{trans('file.Distribution')}}</option>
+                            <option value="4">{{trans('file.Livré')}}</option>
+                            <option value="5">{{trans('file.Ne répond pas')}}</option>
+                            <option value="6">{{trans('file.Injoignable')}}</option>
+                            <option value="7">{{trans('file.Erreur numéro')}}</option>
+                            <option value="8">{{trans('file.Reporté')}}</option>
+                            <option value="9">{{trans('file.Programmé')}}</option>
+                            <option value="10">{{trans('file.Annulé')}}</option>
+                            <option value="11">{{trans('file.Refusé')}}</option>
+                            <option value="12">{{trans('file.Retourné')}}</option>
+                        </select>
                     </div>
-                    {{-- <div class="col-md-12 form-group">
-                        <label><strong>{{trans('file.Status')}} *</strong></label>
-                        <table class="f-wth table">
-                            <tr>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_pickup" value="1">
-                                        <label class="mt-2">{{trans('file.Pickup')}}</label>
-                                    </div>
-                                </td>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_sent" value="2">
-                                        <label class="mt-2">{{trans('file.Sent')}}</label>                     
-                                    </div>
-                                </td>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_distribution" value="3">
-                                        <label class="mt-2">{{trans('file.Distribution')}}</label>
-                                    </div>
-                                </td>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_delivered" value="4">
-                                        <label class="mt-2">{{trans('file.Delivered')}}</label>
-                                    </div>
-                                </td>
-                                <td class="w-20">
-                                    <div>
-                                        <input class="mt-2" type="checkbox" name="status[]" id="chk_return" value="5">
-                                        <label class="mt-2">{{trans('file.Return')}}</label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_pickup" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_sent" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_distribution" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_delivered" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" data-field="chk_return" name="status_date[]" disabled>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                    <div class="col-md-3 form-group">
+                        <label><strong>{{trans('file.Date')}} *</strong></label>
+                        <div class="input-group" >
+                            <input type="text" class="form-control" id="dtpicker_delivery" name="status_date" required readonly>
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="col-md-3 form-group">
+                        <label><strong>{{trans('file.Date')}} *</strong></label>
+                        <div class="input-group date" id="dtpicker_delivery">
+                            <input type="text" class="form-control" name="status_date" required readonly>
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
                     </div> --}}
+                    <div class="col-md-6 form-group">
+                        <label><strong>{{trans('file.Delivered By')}} *</strong></label>
+                        <input type="text" name="delivered_by" class="form-control" required>
+                    </div>                                            
+                </div>
+                <div class="row">
                     <div class="col-md-6 form-group">
                         <label><strong>{{trans('file.customer')}} *</strong></label>
                         <p id="customer"></p>
                     </div>
-                    <div class="col-md-6 mt-2 form-group">
-                        <label><strong>{{trans('file.Delivered By')}} *</strong></label>
-                        <input type="text" name="delivered_by" class="form-control" required>
-                    </div>
-                    {{-- <div class="col-md-6 mt-2 form-group">
-                        <label>{{trans('file.Recieved By')}} </label>
-                        <input type="text" name="recieved_by" class="form-control">
-                    </div> --}}
-                    {{-- <div class="col-md-6 form-group">
-                        <label>{{trans('file.Attach File')}}</label>
-                        <input type="file" name="file" class="form-control">
-                    </div> --}}
-                    {{-- <div class="col-md-6 form-group">
-                        <label>{{trans('file.Address')}} *</label>
-                        <textarea rows="3" name="address" class="form-control" required></textarea>
-                    </div> --}}
                     <div class="col-md-6 form-group">
                         <label><strong>{{trans('file.Note')}}</strong></label>
                         <textarea rows="3" name="note" class="form-control"></textarea>
@@ -561,29 +428,22 @@
     });
 
     $(document).ready(function(){
-        $.fn.datepicker.dates['en'] = {
-            days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-            daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-            months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-            monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Tarik", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            today: "Today",
-            clear: "Clear",
-            format: "dd/mm/yyyy",
-            titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
-            weekStart: 0
-        };
-        $('.datepicker').datepicker({
-            language: 'en'
-        });
-        //$.fn.datepicker.defaults.format = "dd-mm-yyyy";
-        // datepicker = $('.datepicker').datepicker(config);
-        // config.locale = 'fr-fr';
-        // datepicker.destroy();
-        // datepicker = $('.datepicker').datepicker(config);
-        // $localLang = $('html').attr('lang');
-        // alert($localLang);
-        // $('.datepicker').datepicker();
+        // $.fn.datepicker.dates['en'] = {
+        //     days: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
+        //     daysShort: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+        //     daysMin: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"],
+        //     months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+        //     monthsShort: ["Jan", "Fév", "Mar", "Avr", "Mai", "Jui", "Jul", "Aou", "Sep", "Oct", "Nov", "Déc"],
+        //     today: "Aujourd'hui",
+        //     clear: "Effacer",
+        //     format: "dd/mm/yyyy",
+        //     titleFormat: "MM yyyy",
+        //     weekStart: 0
+        // };
+        // $('.datepicker').datepicker({
+        //     language: 'en',
+        //     format: 'dd/mm/yyyy HH:mm:ss'
+        // });
     });
 
     $(".daterangepicker-field").daterangepicker({
@@ -876,33 +736,6 @@
         }
     });
 
-    $(document).on("click", "input[name='status[]']", function(event) {
-        var the_id = $(this).attr('id');
-        if($(this).is(':checked')) {
-            $('[data-field="'+the_id+'"]').prop("required", true);
-            $('[data-field="'+the_id+'"]').prop("disabled", false);
-        } else {
-            $('[data-field="'+the_id+'"]').prop("required", false);
-            $('[data-field="'+the_id+'"]').prop("disabled", true);
-            $('[data-field="'+the_id+'"]').val("");
-        }
-    });
-
-    $(document).on('submit', '.delivery-form', function(e) {
-        if( ($('#chk_pickup').not(':checked').length) && ($('#chk_sent').not(':checked').length) && ($('#chk_distribution').not(':checked').length) && ($('#chk_delivered').not(':checked').length) && ($('#chk_return').not(':checked').length) ) {
-            alert('You must select at least 1 delivery status !');
-            e.preventDefault();
-        }
-        else if( $('input[name="edit_paying_amount"]').val() < parseFloat($('input[name="edit_amount"]').val()) ) {
-            alert('Paying amount cannot be bigger than recieved amount');
-            $('input[name="edit_amount"]').val('');
-            $(".change").text(parseFloat( $('input[name="edit_paying_amount"]').val() - $('input[name="edit_amount"]').val() ).toFixed(2));
-            e.preventDefault();
-        }
-        
-        $('#edit-payment select[name="edit_paid_by_id"]').prop('disabled', false);
-    });
-
     $(document).on("click", "table.sale-list tbody .add-delivery", function(event) {
         var id = $(this).data('id').toString();
         $.get('delivery/create/'+id, function(data) {
@@ -910,17 +743,10 @@
             $('#sr').text(data[1]);
             $('input[name="delivered_by"]').val(data[6]);
             $('#customer').html(data[2] + "<br>" + data[3] + "<br>" + data[4] + "<br>" + data[5]);
-            $('textarea[name="note"]').val(data[7]);            
+            $('textarea[name="note"]').val(data[7]);
+            $('input[name="status_date"]').val(data[8]);
             $('input[name="reference_no"]').val(data[0]);
-            $('input[name="sale_id"]').val(id);
-            if (data['status']) {
-                for (var i=0; i<=data['status'].length-1; i++) {
-                    $("input[value='"+data['status'][i]+"']").prop( "checked", true );
-                    $('[data-value="'+data['status'][i]+'"]').val(data['status_date'][i]);
-                    $('[data-value="'+data['status'][i]+'"]').prop("disabled", false);
-                }
-            }            
-            
+            $('input[name="sale_id"]').val(id);            
             $('#add-delivery').modal('show');
         });
     });

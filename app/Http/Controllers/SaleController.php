@@ -351,8 +351,7 @@ class SaleController extends Controller
                 $nestedData['reference_no'] = $sale->reference_no;
                 $nestedData['customer'] = $sale->customer_name;
                 $nestedData['phone'] = $sale->customer_tel;
-                $nestedData['username'] = User::find($nestedData['sold_by'])->name;                
-                $nestedData['delivery_status'] = "Delivery";
+                $nestedData['username'] = User::find($nestedData['sold_by'])->name; 
 
                 $lims_city_data = City::where('id', $sale->customer_city)->first();
                 $nestedData['city'] = $lims_city_data->name;
@@ -465,13 +464,11 @@ class SaleController extends Controller
                                     <button type="button" class="btn btn-link view"><i class="fa fa-eye"></i> '.trans('file.View').'</button>
                                 </li>';
                 if(in_array("sales-edit", $request['all_permission'])){
-                    if($sale->is_valide != 1)
-                    {
+                    if($sale->is_valide != 1) {
                         $nestedData['options'] .= '<li>
                         <a href="'.route('sales.edit', $sale->id).'" class="btn btn-link"><i class="dripicons-document-edit"></i> '.trans('file.edit').'</a>
                         </li>'; 
-                    } elseif(Auth::user()->role_id == 1)
-                    {
+                    } elseif(Auth::user()->role_id == 1) {
                         $nestedData['options'] .= 
                         '<li>
                             <a href="'.route('sales.edit', $sale->id).'" class="btn btn-link"><i class="dripicons-document-edit"></i> '.trans('file.edit').'</a>

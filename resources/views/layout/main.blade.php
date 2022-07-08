@@ -49,6 +49,8 @@
     <script type="text/javascript" src="<?php echo asset('public/vendor/jquery/jquery.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/jquery/jquery-ui.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/jquery/bootstrap-datepicker.min.js'); ?>"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/jquery/jquery.timepicker.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/popper.js/umd/popper.min.js'); ?>">
     </script>
